@@ -75,10 +75,50 @@ def createTree(dataSet, labels):
     bestFeatLabel = labels[bestFeat]
     myTree = {bestFeatLabel:{}}
     del(labels[bestFeat])
-    subLabels = labels[:]
     featValues = [example[bestFeat] for example in dataSet]
     uniqueVals = set(featValues)
     for value in uniqueVals:
+        subLabels = labels[:] #一定要重新赋值subLabels。否则，由于list是引用传递，在创建子树时del掉labels后将不复原
         subDataSet = splitDataSet(dataSet, bestFeat, value)
         myTree[bestFeatLabel][value] = createTree(subDataSet, subLabels)
     return myTree
+
+
+def classify(inputTree, featLabels, testVec):
+    firstStr = inputTree.keys()[0]
+    secondDict = inputTree[firstStr]
+    featIndex = featLabels.index(firstStr)
+    for key in secondDict.keys():
+        if testVec[featIndex] == key:
+            if type(secondDict[key]).__name__ == 'dict':
+                classLabel = classify(secondDict[key], featLabels, testVec)
+            else:
+                classLabel = secondDict[key]
+    return classLabel
+
+
+def storeTree(inputTree, filename):
+    import pickle
+    with open(filename, 'w') as fw:
+        pickle.dump(inputTree, fw)
+
+
+def grabTree(filename):
+    import pickle
+    with open(filename) as fr:
+        return pickle.load(fr)
+
+
+if __name__ == '__main__':
+    import treePlotter as tp
+    # myTree = tp.retrieveTree(1)
+    # storeTree(myTree, 'classifierStorage.txt')
+    # print 'Store in file \'classifierStorage.txt\' successfully. '
+    # print 'Grab from file \'classifierStorage.txt\': '
+    # print grabTree('classifierStorage.txt')
+
+    with open(r'F:\machinelearninginaction\Ch03\lenses.txt') as fr:
+        lenses = [inst.strip().split('\t') for inst in fr.readlines()]
+        lensesLabels = ['age', 'prescript', 'astigmatic', 'tearRate']
+        lensesTree = createTree(lenses, lensesLabels)
+        tp.createPlot(lensesTree)
