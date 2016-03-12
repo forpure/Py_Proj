@@ -86,9 +86,9 @@ def createPlot(inTree):
     fig.clf()
     axprops = dict(xticks=[], yticks=[])
     createPlot.ax1 = plt.subplot(111, frameon=False, **axprops)
-    plotTree.totalW = float(getNumLeafs(inTree)) #指x轴划分的段数
-    plotTree.totalD = float(getTreeDepth(inTree)) #指y轴划分的段数
-    plotTree.xOff = -0.5 / plotTree.totalW #书的整体x轴偏移
-    plotTree.yOff = 1.0 #树的整体y轴偏移
+    plotTree.totalW = float(getNumLeafs(inTree))  # 指x轴划分的段数
+    plotTree.totalD = float(getTreeDepth(inTree))  # 指y轴划分的段数
+    plotTree.xOff = -0.5 / plotTree.totalW  # 树的整体x轴偏移
+    plotTree.yOff = 1.0  # 树的整体y轴偏移
     plotTree(inTree, (0.5, 1.0), '')
     plt.show()

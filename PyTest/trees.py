@@ -78,7 +78,7 @@ def createTree(dataSet, labels):
     featValues = [example[bestFeat] for example in dataSet]
     uniqueVals = set(featValues)
     for value in uniqueVals:
-        subLabels = labels[:] #一定要重新赋值subLabels。否则，由于list是引用传递，在创建子树时del掉labels后将不复原
+        subLabels = labels[:]  # 一定要重新赋值subLabels。否则，由于list是引用传递，在创建子树时del掉labels后将不复原
         subDataSet = splitDataSet(dataSet, bestFeat, value)
         myTree[bestFeatLabel][value] = createTree(subDataSet, subLabels)
     return myTree
